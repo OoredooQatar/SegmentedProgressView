@@ -41,6 +41,7 @@ public class SegmentedProgressView: UIView, ProgressBarElementViewDelegate {
             redraw()
         }
     }
+    ///percent is between 0 and 1
     public var percent:Float = 0
     var elementViews: [SegmentView] = []
     
