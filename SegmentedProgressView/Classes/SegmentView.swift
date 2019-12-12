@@ -68,13 +68,46 @@ public class SegmentView: UIView {
         })
         
         let animation = CABasicAnimation(keyPath: "path")
+        print( endPath.cgPath)
         animation.toValue = endPath.cgPath
         animation.duration = self.item.duration
         animation.repeatCount = 1
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        animation.fillMode = kCAFillModeBoth
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.fillMode = CAMediaTimingFillMode.both
         animation.isRemovedOnCompletion = false
         
+        filledShape.add(animation, forKey: animation.keyPath)
+        CATransaction.commit()
+    }
+
+    func animate(to percent:CGFloat) {
+
+        let fillColor = progressTintColor ?? .gray
+
+        let startPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: bounds.height, height: bounds.height), cornerRadius: bounds.height / 2).cgPath
+        let percentWidth = bounds.width * percent
+        let endBounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: percentWidth, height: bounds.height)
+        let endPath = UIBezierPath(roundedRect: endBounds, cornerRadius: bounds.height / 2)
+        let filledShape = CAShapeLayer()
+        filledShape.path = startPath
+        filledShape.fillColor = fillColor.cgColor
+        self.layer.addSublayer(filledShape)
+
+        CATransaction.begin()
+        CATransaction.setCompletionBlock({
+            self.delegate?.progressBar(didFinishWithElement: self)
+            self.item.handler?()
+        })
+
+        let animation = CABasicAnimation(keyPath: "path")
+//        animation.fromValue = 0
+        animation.toValue = endPath.cgPath
+        animation.duration = self.item.duration
+        animation.repeatCount = 1
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.fillMode = CAMediaTimingFillMode.forwards
+        animation.isRemovedOnCompletion = false
+
         filledShape.add(animation, forKey: animation.keyPath)
         CATransaction.commit()
     }

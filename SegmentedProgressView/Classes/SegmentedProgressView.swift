@@ -41,7 +41,7 @@ public class SegmentedProgressView: UIView, ProgressBarElementViewDelegate {
             redraw()
         }
     }
-    
+    public var percent:Float = 0
     var elementViews: [SegmentView] = []
     
     public init(withItems items: [ProgressItem]!) {
@@ -97,26 +97,38 @@ public class SegmentedProgressView: UIView, ProgressBarElementViewDelegate {
             elementViews.append(elementView)
             xOffset += elementWidth + horizontalSpace
         }
-        
+        let percentByHundred = percent * 100.0
         let elementView = elementViews[0]
-        delegate?.progressBar(willDisplayItemAtIndex: 0)
-        elementView.animate()
+        if(percentByHundred>0){
+            delegate?.progressBar(willDisplayItemAtIndex: 0)
+            elementView.animate()
+        }
+
     }
     
     public func progressBar(didFinishWithElement element: SegmentView) {
         
         let elements = self.items ?? [ProgressItem(withDuration: 6) { print("finished 0") }]
-        
+
         if var index = elementViews.index(of: element) {
             
-            delegate?.progressBar(didDisplayItemAtIndex: index)
+            //delegate?.progressBar(didDisplayItemAtIndex: index)
             
             index += 1
-            
+            let percentByHundred = percent * 100.0
             if index < elements.count {
                 let elementView = elementViews[index]
-                delegate?.progressBar(willDisplayItemAtIndex: index)
-                elementView.animate()
+                if( percentByHundred>elementView.item.minValue){
+                    if ( percentByHundred <= elementView.item.maxValue ){
+                        let diff = elementView.item.maxValue - percentByHundred
+                        let percentTomax = diff / elementView.item.maxValue
+                    elementView.animate(to: CGFloat(percentTomax))
+                }else{
+                    elementView.animate()
+
+                    }
+
+                }
             }
         }
     }

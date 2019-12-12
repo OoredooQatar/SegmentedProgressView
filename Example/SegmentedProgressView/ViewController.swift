@@ -12,54 +12,43 @@ import SegmentedProgressView
 class ViewController: UIViewController, ProgressBarDelegate {
 
     var items: [ProgressItem] = []
+     let numberOfSegments = 5
     
-    @IBOutlet weak var xibProgressView: SegmentedProgressView!
+   // @IBOutlet weak var xibProgressView: SegmentedProgressView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        for _ in 0...4 {
-            items.append(ProgressItem(withDuration: 3))
+
+        func getTheMinum(index:Int)->Float{
+            let percent:Float = Float(index-1)/Float(numberOfSegments)
+            let min = Float(percent * 100.0)
+            return min
+        }
+        func getTheMax(index:Int)->Float{
+            let percent:Float = Float(index)/Float(numberOfSegments)
+            let max = Float(percent * 100.0)
+            return max
+        }
+
+        for i in 0...numberOfSegments {
+            let min = getTheMinum(index: i)
+            let max = getTheMax(index: i)
+            items.append(ProgressItem(withDuration: 1, minmum: min, maximum: max))
+
         }
         
-        let elementWithCompletion = ProgressItem(withDuration: 3) {
-            print("elementWithCompletion finished")
-        }
+
         
-        items.append(elementWithCompletion)
-        
-        var progressView = SegmentedProgressView(withItems: items)
-        progressView.delegate = self
-        progressView.backgroundColor = .white
-        progressView.itemSpace = 3.0
-        progressView.frame = CGRect(x: 20, y: 60, width: view.bounds.width - 40, height: 4)
-        view.addSubview(progressView)
-        
-        items = []
-        for _ in 0...10 {
-            items.append(ProgressItem(withDuration: 4))
-        }
-        
-        progressView = SegmentedProgressView(withItems: items)
+        let progressView = SegmentedProgressView(withItems: items)
         progressView.progressTintColor = UIColor(red: 66.0/255.0, green: 134.0/255.0, blue: 244.0/255.0, alpha: 1.0)
         progressView.trackTintColor = UIColor(red: 133/255.0, green: 169/255.0, blue: 229/255.0, alpha: 1.0)
 
         progressView.delegate = self
         progressView.backgroundColor = .white
-        progressView.itemSpace = 4.0
-        progressView.frame = CGRect(x: 20, y: 80, width: view.bounds.width - 40, height: 2)
+        progressView.itemSpace = 3.0
+        progressView.frame = CGRect(x: 20, y: 60, width: view.bounds.width - 40, height: 10)
         view.addSubview(progressView)
-        
-        items = []
-        for _ in 0...4 {
-            items.append(ProgressItem(withDuration: 3))
-        }
-        xibProgressView.delegate = self
-        xibProgressView.progressTintColor = UIColor(red: 66.0/255.0, green: 134.0/255.0, blue: 244.0/255.0, alpha: 1.0)
-        xibProgressView.trackTintColor = UIColor(red: 133/255.0, green: 169/255.0, blue: 229/255.0, alpha: 1.0)
-        xibProgressView.itemSpace = 6.0
-        xibProgressView.items = items
-        
+        progressView.percent = 0.5
     }
 
     override func didReceiveMemoryWarning() {
