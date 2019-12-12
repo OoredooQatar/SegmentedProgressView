@@ -121,8 +121,7 @@ public class SegmentedProgressView: UIView, ProgressBarElementViewDelegate {
                 let elementView = elementViews[index]
                 if( percentByHundred>elementView.item.minValue){
                     if ( percentByHundred <= elementView.item.maxValue ){
-                        let diff = elementView.item.maxValue - percentByHundred
-                        let percentTomax = diff / elementView.item.maxValue
+                        let percentTomax = percentByHundred / elementView.item.maxValue
                     elementView.animate(to: CGFloat(percentTomax))
                 }else{
                     elementView.animate()

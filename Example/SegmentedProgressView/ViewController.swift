@@ -48,7 +48,7 @@ class ViewController: UIViewController, ProgressBarDelegate {
         progressView.itemSpace = 3.0
         progressView.frame = CGRect(x: 20, y: 60, width: view.bounds.width - 40, height: 10)
         view.addSubview(progressView)
-        progressView.percent = 0.5
+        progressView.percent = 0.95
     }
 
     override func didReceiveMemoryWarning() {
